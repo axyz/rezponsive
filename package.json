@@ -20,6 +20,7 @@
   ],
   "author": "Andrea Moretti <axyzxp@gmail.com>",
   "license": "MIT",
+  "repository": "zalando/rezponsive",
   "ava": {
     "files": [
       "src/**/*-test.js"
