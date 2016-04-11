@@ -91,7 +91,7 @@ function Rezponsive(Element) {
     RezponsiveComponent.propTypes = {
         mq: PropTypes.object,
         isTouchOnServer: PropTypes.bool,
-        serverMedia: PropTypes.string
+        serverMedia: PropTypes.object
     };
 
     RezponsiveComponent.defaultProps = {
