@@ -1,8 +1,8 @@
 {
   "name": "rezponsive",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "React decorator for responsive behaviors",
-  "main": "dist/index.js",
+  "main": "dist/rezponsive.js",
   "scripts": {
     "start": "NODE_ENV=dev webpack-dev-server --config ./webpack.config.example.js",
     "test": "ava",
