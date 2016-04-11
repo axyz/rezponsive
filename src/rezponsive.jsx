@@ -39,7 +39,7 @@ function Rezponsive(Element) {
                     currentMedia: {}
                 };
 
-                this.state.currentMedia[props.serverMedia] = true;
+                this.state.currentMedia = props.serverMedia;
             }
         }
 
@@ -97,7 +97,9 @@ function Rezponsive(Element) {
     RezponsiveComponent.defaultProps = {
         mq: { all: 'all' },
         isTouchOnServer: false,
-        serverMedia: 'all'
+        serverMedia: {
+            all: true
+        }
     };
 
     return RezponsiveComponent;

@@ -58,7 +58,10 @@ supported by the [mediaquery library](https://github.com/axyz/mediaquery)
         huge: Infinity
     }}
     isTouchOnServer // if true will treat server environment as touch devices
-    serverMedia="small" // if not defined will default to "all"
+    serverMedia={
+        small: true,
+        medium: false
+    } // if not defined will default to { all: true }
 />
 ```
 on isomorphic app you probably want to define a `severMedia` to choose what to
