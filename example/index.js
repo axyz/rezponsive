@@ -6,7 +6,10 @@ import Rezponsive from 'rezponsive';
 const Example = Rezponsive(({
     currentMedia,
     isTouch
-}) => <div>{JSON.stringify({currentMedia, isTouch})}</div>);
+}) => {
+    console.log('render');
+    return <div>{JSON.stringify({currentMedia, isTouch})}</div>;
+});
 
 const ReadContext = (props, {
     currentMedia,
@@ -30,6 +33,14 @@ render(
                 xl: Infinity,
                 portrait: '(orientation: portrait)',
                 landscape: '(orientation: landscape)'
+            }}
+            clientMedia={{
+                s: false,
+                m: true,
+                l: false,
+                xl: false,
+                portrait: true,
+                landscape: false,
             }}
         />
         <ContextExample

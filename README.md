@@ -62,11 +62,24 @@ supported by the [mediaquery library](https://github.com/axyz/mediaquery)
         small: true,
         medium: false
     } // if not defined will default to { all: true }
+    clientMedia={
+        small: true,
+        medium: false
+    } // if not defined will default null
 />
 ```
 on isomorphic app you probably want to define a `severMedia` to choose what to
 render on server side and eventually provide the isTouchOnServer property in
 case you want to render as it is a touch device.
+
+MatchMedia detection will cause an additional rendering when the component is
+mounted in order to update the state accordingly to the matched queries.
+For heavy components this may lead to performance issues on first loading,
+to avoid that you can provide an `clientMedia` prop that will be used for the
+initial rendering and the state will only change if the current mediaquery
+changes. Of course however you have to be sure that `clientMedia` reflect the
+current media query, otherwise your app will start with the wrong settings
+and will keep them until a resize big enough to trigger matchmedia updates.
 
 Sometimes you may want to have mediaquery informations on really deep nested
 object, rezponsive will inject currentMedia and isTouch not only on props, but

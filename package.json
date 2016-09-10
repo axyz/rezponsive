@@ -1,6 +1,6 @@
 {
   "name": "rezponsive",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "description": "React decorator for responsive behaviors",
   "main": "dist/rezponsive.js",
   "scripts": {
