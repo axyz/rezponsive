@@ -55,6 +55,7 @@
     "webpack-dev-server": "^1.14.1"
   },
   "dependencies": {
-    "mediaquery": "0.0.4"
+    "mediaquery": "0.0.4",
+    "prop-types": "^15.6.0"
   }
 }
