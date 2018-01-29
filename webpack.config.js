@@ -10,18 +10,11 @@ const conf = {
     modules: ['node_modules']
   },
   module: {
-    rules: [/*{
-        test: /\.jsx?$/,
-        enforce: 'pre',
-        exclude: /node_modules/,
-        loader: 'eslint'
-      },*/
-      {
-        test: /\.jsx?$/,
-        exclude: /node_modules/,
-        loader: 'babel-loader'
-      }
-    ]
+    rules: [{
+      test: /\.jsx?$/,
+      exclude: /node_modules/,
+      loader: 'babel-loader'
+    }]
   },
   output: {
     filename: 'rezponsive.js',
