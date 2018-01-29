@@ -1,3 +1,4 @@
+const path = require('path');
 const ENVIRONMENT = process.env.NODE_ENV || 'production';
 
 const conf = {
@@ -6,28 +7,27 @@ const conf = {
   externals: {
   },
   resolve: {
-    alias: {},
-    modulesDirectories: ['node_modules']
+    modules: ['node_modules']
   },
   module: {
-    loaders: [
-      {
+    rules: [/*{
+        test: /\.jsx?$/,
+        enforce: 'pre',
         exclude: /node_modules/,
-        loader: 'babel',
-        test: /\.jsx?$/
+        loader: 'eslint'
+      },*/
+      {
+        test: /\.jsx?$/,
+        exclude: /node_modules/,
+        loader: 'babel-loader'
       }
-    ],
-    preLoaders: [{
-      test: /\.jsx?$/,
-      exclude: /node_modules/,
-      loader: 'eslint'
-    }]
+    ]
   },
   output: {
     filename: 'rezponsive.js',
     library: 'rezponsive',
     libraryTarget: 'umd',
-    path: './dist/'
+    path: path.resolve(__dirname, 'dist')
   },
   plugins: []
 };
