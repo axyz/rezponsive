@@ -1,11 +1,13 @@
 const path = require('path');
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const ENVIRONMENT = process.env.NODE_ENV || 'production';
+const pkg = require('./package.json');
 
 const conf = {
   devtool: 'source-maps',
   entry: './index',
-  externals: {
-  },
+  externals: [
+  ],
   resolve: {
     modules: ['node_modules']
   },
@@ -22,12 +24,19 @@ const conf = {
     libraryTarget: 'umd',
     path: path.resolve(__dirname, 'dist')
   },
-  plugins: []
+  plugins: [
+    new BundleAnalyzerPlugin({
+      analyzerMode: 'static',
+      openAnalyzer: false
+    })
+  ]
 };
 
 if (ENVIRONMENT === 'production') {
-  conf.externals.react = 'react';
-  conf.externals['react-dom'] = 'react-dom';
+  conf.externals.push('react');
+  Object.keys(pkg.dependencies).forEach((dep) => {
+    conf.externals.push(dep);
+  });
 }
 
 module.exports = conf;
