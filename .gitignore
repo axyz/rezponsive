@@ -34,3 +34,4 @@ node_modules
 
 # Dist files
 dist
+cjs
