@@ -17,8 +17,8 @@ const ReadContext = (props, {
 }) => <div>{JSON.stringify({currentMedia, isTouch})}</div>;
 
 ReadContext.contextTypes = {
-    currentMedia: PropTypes.object,
-    isTouch: PropTypes.bool
+    currentMedia: true,
+    isTouch: true
 };
 
 const ContextExample = Rezponsive(ReadContext);

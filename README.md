@@ -90,8 +90,8 @@ You can easily access the context on a child component defining the proper conte
 const ReadContext = (props, context) => // use context.currentMedia or isTouch here;
 
 ReadContext.contextTypes = {
-    currentMedia: PropTypes.object,
-    isTouch: PropTypes.bool
+    currentMedia: true,
+    isTouch: true
 };
 
 ```
