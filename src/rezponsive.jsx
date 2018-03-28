@@ -111,8 +111,8 @@ function Rezponsive(Element) {
     };
 
     RezponsiveComponent.childContextTypes = {
-        currentMedia: PropTypes.object,
-        isTouch: PropTypes.bool
+        currentMedia: true,
+        isTouch: true
     };
 
     RezponsiveComponent.propTypes = {
