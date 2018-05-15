@@ -85,16 +85,31 @@ Sometimes you may want to have mediaquery informations on really deep nested
 object, rezponsive will inject currentMedia and isTouch not only on props, but
 also on the context of the underlying react subtree.
 
-You can easily access the context on a child component defining the proper contextTypes
+You can easily access the context on a child component using the exported `RezponsiveContext`
 ```javascript
-const ReadContext = (props, context) => // use context.currentMedia or isTouch here;
+import Rezponsive, { RezponsiveContext } from 'rezponsive';
 
-ReadContext.contextTypes = {
-    currentMedia: true,
-    isTouch: true
-};
+const Component = Rezponsive(({ currentMedia, isTouch }) => {
+  return (
+    <RezponsiveContext.Consumer>
+      {({ currentMedia, isTouch }) => (
+        <div>{JSON.stringify({ currentMedia, isTouch })}</div>
+      )}
+    </RezponsiveContext.Consumer>
+  );
+});
 
 ```
 
-Note that you do not specify contextTypes for your component the context will be
-an empty object so you will not have any overhead from rezponsive.
+or using the provided helper decorator `RezponsiveConsumer`
+```javascript
+const Component = RezponsiveConsumer(({ currentMedia, isTouch }) => (
+  <div>{JSON.stringify({ currentMedia, isTouch })}</div>
+));
+
+// assuming that MyApp is decorated with Rezponsive
+<MyApp>
+  <Component />
+</MyApp>
+
+```

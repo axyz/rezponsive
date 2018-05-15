@@ -1,24 +1,22 @@
 var config = require('./webpack.config');
 
-config.entry = [
-  './example/index.js'
-];
+config.entry = ['./example/index.js'];
 
 config.output = {
   publicPath: '/',
-  filename: 'index.js'
+  filename: 'index.js',
 };
 
 config.resolve = {
   alias: {
-    'rezponsive': '../index'
+    rezponsive: '../index',
   },
-  modulesDirectories: ['node_modules']
+  modules: ['node_modules'],
 };
 
 config.devServer = {
   contentBase: 'example/',
-  stats: {colors: true}
+  stats: { colors: true },
 };
 
 module.exports = config;

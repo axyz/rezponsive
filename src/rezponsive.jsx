@@ -1,137 +1,140 @@
 const canUseDOM = !!(
-    (typeof window !== 'undefined' &&
-    window.document && window.document.createElement)
+  typeof window !== 'undefined' &&
+  window.document &&
+  window.document.createElement
 );
 
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import MQ from 'mediaquery';
 
-function Rezponsive(Element) {
-    class RezponsiveComponent extends Component {
-        constructor(props) {
-            super();
+export const RezponsiveContext = React.createContext({});
 
-            const mq = MQ.asArray(props.mq);
+export default function Rezponsive(Element) {
+  class RezponsiveComponent extends Component {
+    constructor(props) {
+      super(props);
 
-            if (canUseDOM) {
-                const isTouch = window.Modernizr
-                    ? window.Modernizr.touch
-                    // inline Modernizr check
-                    : (('ontouchstart' in window) || window.DocumentTouch && document instanceof DocumentTouch);
+      const mq = MQ.asArray(props.mq);
 
-                const initialCurrentMedia = props.clientMedia ||
-                    mq.reduce((matches, q, index, mq) => {
-                        if (index === mq.length) {
-                            matches[q[0]] = true;
-                        } else {
-                            matches[q[0]] = false;
-                        }
-                        return matches;
-                    }, {});
+      if (canUseDOM) {
+        const isTouch = window.Modernizr
+          ? window.Modernizr.touch
+          : // inline Modernizr check
+            'ontouchstart' in window ||
+            (window.DocumentTouch && document instanceof DocumentTouch);
 
-                this.skipInitialCheck = !!props.clientMedia;
-
-                this.state = {
-                    mm: window.matchMedia,
-                    mq: mq,
-                    isTouch: isTouch,
-                    currentMedia: initialCurrentMedia,
-                };
+        const initialCurrentMedia =
+          props.clientMedia ||
+          mq.reduce((matches, q, index, mq) => {
+            if (index === mq.length) {
+              matches[q[0]] = true;
             } else {
-                this.state = {
-                    isTouch: props.isTouchOnServer,
-                    currentMedia: {}
-                };
-
-                this.state.currentMedia = props.serverMedia;
+              matches[q[0]] = false;
             }
-        }
+            return matches;
+          }, {});
 
-        getChildContext() {
-            return {
-                currentMedia: this.state.currentMedia,
-                isTouch: this.state.isTouch
-            };
-        }
+        this.skipInitialCheck = props.clientMedia !== undefined;
 
-        componentDidMount() {
-            this.updateMediaQueries();
-            const { mm, mq } = this.state;
+        this.state = {
+          mm: window.matchMedia,
+          mq: mq,
+          isTouch: isTouch,
+          currentMedia: initialCurrentMedia,
+        };
+      } else {
+        this.state = {
+          isTouch: props.isTouchOnServer,
+          currentMedia: {},
+        };
 
-            Object.keys(mq).forEach(q => {
-                mm(mq[q]).addListener(() => {
-                    this.updateMediaQueries();
-                });
-            });
-        }
+        this.state.currentMedia = props.serverMedia;
+      }
+    }
 
-        updateMediaQueries() {
-            const {
-                mm,
-                mq,
-                currentMedia,
-                skipInitialMatch
-            } = this.state;
+    componentDidMount() {
+      this.updateMediaQueries();
+      const { mm, mq } = this.state;
 
-            if (this.skipInitialCheck) {
-                this.skipInitialCheck = false;
-                return;
-            }
+      Object.keys(mq).forEach(q => {
+        mm(mq[q]).addListener(() => {
+          this.updateMediaQueries();
+        });
+      });
+    }
 
-            const newMedia = mq
-                .reduce((matches, q) => {
-                    matches[q[0]] = mm(q[1]).matches;
-                    return matches;
-                }, {});
+    updateMediaQueries() {
+      const { mm, mq, currentMedia, skipInitialMatch } = this.state;
 
-            const needsUpdate = Object.keys(newMedia).reduce((shouldUpdate, query) => {
-                return shouldUpdate || newMedia[query] !== currentMedia[query];
-            }, false);
+      if (this.skipInitialCheck) {
+        this.skipInitialCheck = false;
+        return;
+      }
 
-            if (needsUpdate) {
-                this.setState({
-                    currentMedia: mq
-                        .reduce((matches, q) => {
-                            matches[q[0]] = mm(q[1]).matches;
-                            return matches;
-                        }, {})
-                });
-            }
-        }
+      const newMedia = mq.reduce((matches, q) => {
+        matches[q[0]] = mm(q[1]).matches;
+        return matches;
+      }, {});
 
-        render() {
-            return (
-                <Element {...this.props}
-                    isTouch={this.state.isTouch}
-                    currentMedia={this.state.currentMedia}
-                />
-            );
-        }
-    };
-
-    RezponsiveComponent.childContextTypes = {
-        currentMedia: true,
-        isTouch: true
-    };
-
-    RezponsiveComponent.propTypes = {
-        mq: PropTypes.object,
-        isTouchOnServer: PropTypes.bool,
-        serverMedia: PropTypes.object,
-        clientMedia: PropTypes.object,
-    };
-
-    RezponsiveComponent.defaultProps = {
-        mq: { all: 'all' },
-        isTouchOnServer: false,
-        serverMedia: {
-            all: true
+      const needsUpdate = Object.keys(newMedia).reduce(
+        (shouldUpdate, query) => {
+          return shouldUpdate || newMedia[query] !== currentMedia[query];
         },
-        clientMedia: null,
-    };
+        false,
+      );
 
-    return RezponsiveComponent;
+      if (needsUpdate) {
+        this.setState({
+          currentMedia: mq.reduce((matches, q) => {
+            matches[q[0]] = mm(q[1]).matches;
+            return matches;
+          }, {}),
+        });
+      }
+    }
+
+    render() {
+      return (
+        <RezponsiveContext.Provider
+          value={{
+            isTouch: this.state.isTouch,
+            currentMedia: this.state.currentMedia,
+          }}
+        >
+          <Element
+            isTouch={this.state.isTouch}
+            currentMedia={this.state.currentMedia}
+            {...this.props}
+          />
+        </RezponsiveContext.Provider>
+      );
+    }
+  }
+
+  RezponsiveComponent.propTypes = {
+    mq: PropTypes.object,
+    isTouchOnServer: PropTypes.bool,
+    serverMedia: PropTypes.object,
+    clientMedia: PropTypes.object,
+  };
+
+  RezponsiveComponent.defaultProps = {
+    mq: { all: 'all' },
+    isTouchOnServer: false,
+    serverMedia: {
+      all: true,
+    },
+    clientMedia: null,
+  };
+
+  return RezponsiveComponent;
 }
 
-export default Rezponsive;
+export function RezponsiveConsumer(Element) {
+  return props => (
+    <RezponsiveContext.Consumer>
+      {ctx => <Element {...{ ...ctx, ...props }} />}
+    </RezponsiveContext.Consumer>
+  );
+}
