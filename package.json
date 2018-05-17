@@ -1,10 +1,11 @@
 {
   "name": "rezponsive",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "React decorator for responsive behaviors",
   "main": "cjs/rezponsive.js",
   "scripts": {
-    "start": "NODE_ENV=dev webpack-dev-server --config ./webpack.config.example.js",
+    "start":
+      "NODE_ENV=dev webpack-dev-server --config ./webpack.config.example.js",
     "test": "ava",
     "test:watch": "ava --watch",
     "prepublish": "npm run build:umd && npm run build:cjs",
@@ -24,19 +25,11 @@
   "license": "MIT",
   "repository": "zalando/rezponsive",
   "ava": {
-    "files": [
-      "src/**/*-test.js"
-    ],
+    "files": ["src/**/*-test.js"],
     "babel": {
-      "presets": [
-        "es2015",
-        "stage-3",
-        "react"
-      ]
+      "presets": ["es2015", "stage-3", "react"]
     },
-    "require": [
-      "babel-core/register"
-    ]
+    "require": ["babel-core/register"]
   },
   "devDependencies": {
     "ava": "^0.13.0",

@@ -10,6 +10,24 @@ import MQ from 'mediaquery';
 
 export const RezponsiveContext = React.createContext({});
 
+// https://stackoverflow.com/questions/4817029/whats-the-best-way-to-detect-a-touch-screen-device-using-javascript
+function is_touch_device() {
+  if (
+    'ontouchstart' in window ||
+    (window.DocumentTouch && document instanceof DocumentTouch)
+  ) {
+    return true;
+  }
+
+  // include the 'heartz' as a way to have a non matching MQ to help terminate the join
+  // https://git.io/vznFH
+  const prefixes = ' -webkit- -moz- -o- -ms- '.split(' ');
+  const query = ['(', prefixes.join('touch-enabled),('), 'heartz', ')'].join(
+    '',
+  );
+  return window.matchMedia(query).matches;
+}
+
 export default function Rezponsive(Element) {
   class RezponsiveComponent extends Component {
     constructor(props) {
@@ -18,11 +36,7 @@ export default function Rezponsive(Element) {
       const mq = MQ.asArray(props.mq);
 
       if (canUseDOM) {
-        const isTouch = window.Modernizr
-          ? window.Modernizr.touch
-          : // inline Modernizr check
-            'ontouchstart' in window ||
-            (window.DocumentTouch && document instanceof DocumentTouch);
+        const isTouch = is_touch_device();
 
         const initialCurrentMedia =
           props.clientMedia ||
