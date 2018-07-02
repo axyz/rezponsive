@@ -28,8 +28,45 @@ function is_touch_device() {
   return window.matchMedia(query).matches;
 }
 
+const isObject = a => a !== undefined && a !== null && typeof a === 'object';
+
+const isDifferent = (a, b) => {
+  return Object.keys(a).some(el => a[el] !== b[el]);
+};
+
 export default function Rezponsive(Element) {
   class RezponsiveComponent extends Component {
+    static getDerivedStateFromProps(props, state) {
+      // short circuit for invalid clientMedia
+      if (!isObject(props.clientMedia)) return null;
+      // no previous clientMedia defined
+      if (!isObject(state.prevClientMedia)) {
+        // override the currentMedia with the newly passed clientMedia prop
+        if (isDifferent(props.clientMedia, state.currentMedia)) {
+          return {
+            prevClientMedia: props.clientMedia,
+            currentMedia: props.clientMedia,
+          };
+        } else {
+          return null;
+        }
+      }
+
+      // both clientMedia and prevClientMedia are defined and valid
+      if (
+        // check if an update is required
+        isDifferent(props.clientMedia, state.prevClientMedia) &&
+        isDifferent(props.clientMedia, state.currentMedia)
+      ) {
+        return {
+          prevClientMedia: props.clientMedia,
+          currentMedia: props.clientMedia,
+        };
+      }
+
+      return null;
+    }
+
     constructor(props) {
       super(props);
 
@@ -52,6 +89,7 @@ export default function Rezponsive(Element) {
         this.skipInitialCheck = props.clientMedia !== undefined;
 
         this.state = {
+          prevClientMedia: props.clientMedia,
           mm: window.matchMedia,
           mq: mq,
           isTouch: isTouch,
