@@ -1,6 +1,6 @@
 {
   "name": "rezponsive",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "React decorator for responsive behaviors",
   "main": "cjs/rezponsive.js",
   "scripts": {
