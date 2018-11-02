@@ -92,6 +92,36 @@ render(
         }}
       />
     </RezponsiveApp>
+    <RezponsiveApp
+      mq={{
+        s: 320,
+        m: 720,
+        l: 1024,
+        xl: Infinity,
+        portrait: '(orientation: portrait)',
+        landscape: '(orientation: landscape)',
+      }}
+      clientMedia={{
+        s: false,
+        m: true,
+        l: false,
+        xl: false,
+        portrait: true,
+        landscape: false,
+      }}
+      disableListeners
+    >
+      <ConsumerExample
+        mq={{
+          s: 320,
+          m: 720,
+          l: 1024,
+          xl: Infinity,
+          portrait: '(orientation: portrait)',
+          landscape: '(orientation: landscape)',
+        }}
+      />
+    </RezponsiveApp>
   </div>,
   document.getElementById('rezponsive-example'),
 );
