@@ -113,3 +113,6 @@ const Component = RezponsiveConsumer(({ currentMedia, isTouch }) => (
 </MyApp>
 
 ```
+
+In case you want to use an external listener to update `clientMedia`, you can
+set the `disableListeners` prop to `true` and manually update `clientMedia`.

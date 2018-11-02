@@ -106,6 +106,7 @@ export default function Rezponsive(Element) {
     }
 
     componentDidMount() {
+      if (this.props.disableListeners) return;
       this.updateMediaQueries();
       const { mm, mq } = this.state;
 
@@ -169,6 +170,7 @@ export default function Rezponsive(Element) {
     isTouchOnServer: PropTypes.bool,
     serverMedia: PropTypes.object,
     clientMedia: PropTypes.object,
+    disableListeners: PropTypes.bool,
   };
 
   RezponsiveComponent.defaultProps = {
@@ -178,6 +180,7 @@ export default function Rezponsive(Element) {
       all: true,
     },
     clientMedia: null,
+    disableListeners: false,
   };
 
   return RezponsiveComponent;
