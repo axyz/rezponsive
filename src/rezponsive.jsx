@@ -11,7 +11,7 @@ import MQ from 'mediaquery';
 export const RezponsiveContext = React.createContext({});
 
 // https://stackoverflow.com/questions/4817029/whats-the-best-way-to-detect-a-touch-screen-device-using-javascript
-function is_touch_device() {
+function isTouchDevice() {
   if (
     'ontouchstart' in window ||
     (window.DocumentTouch && document instanceof DocumentTouch)
@@ -42,25 +42,31 @@ export default function Rezponsive(Element) {
       // no previous clientMedia defined
       if (!isObject(state.prevClientMedia)) {
         // override the currentMedia with the newly passed clientMedia prop
-        if (isDifferent(props.clientMedia, state.currentMedia)) {
+        if (isDifferent(props.clientMedia, state.currentMedia)
+          || (props.isTouch !== state.isTouch)
+        ) {
           return {
             prevClientMedia: props.clientMedia,
             currentMedia: props.clientMedia,
+            prevIsTouch : props.isTouch,
+            isTouch: props.isTouch,
           };
         } else {
           return null;
         }
       }
 
+      const needsIsTouchUpdate = (props.isTouch !== state.prevIsTouch)
+        && (props.isTouch !== state.isTouch);
+      const needsClientMediaUpdate = isDifferent(props.clientMedia, state.prevClientMedia)
+        && isDifferent(props.clientMedia, state.currentMedia);
       // both clientMedia and prevClientMedia are defined and valid
-      if (
-        // check if an update is required
-        isDifferent(props.clientMedia, state.prevClientMedia) &&
-        isDifferent(props.clientMedia, state.currentMedia)
-      ) {
+      if (needsClientMediaUpdate || needsIsTouchUpdate) {
         return {
           prevClientMedia: props.clientMedia,
           currentMedia: props.clientMedia,
+          prevIsTouch: needsIsTouchUpdate ? props.isTouch : props.prevIsTouch,
+          isTouch: needsIsTouchUpdate ? props.isTouch : isTouchDevice(),
         };
       }
 
@@ -70,10 +76,12 @@ export default function Rezponsive(Element) {
     constructor(props) {
       super(props);
 
+      this.updateMediaQueries = this.updateMediaQueries.bind(this);
+
       const mq = MQ.asArray(props.mq);
 
       if (canUseDOM) {
-        const isTouch = is_touch_device();
+        const isTouch = props.isTouch !== undefined ? props.isTouch :  isTouchDevice();
 
         const initialCurrentMedia =
           props.clientMedia ||
@@ -90,6 +98,7 @@ export default function Rezponsive(Element) {
 
         this.state = {
           prevClientMedia: props.clientMedia,
+          prevIsTouch: props.isTouch,
           mm: window.matchMedia,
           mq: mq,
           isTouch: isTouch,
@@ -111,9 +120,16 @@ export default function Rezponsive(Element) {
       const { mm, mq } = this.state;
 
       Object.keys(mq).forEach(q => {
-        mm(mq[q]).addListener(() => {
-          this.updateMediaQueries();
-        });
+        mm(mq[q]).addListener(this.updateMediaQueries);
+      });
+    }
+
+    componentWillUnmount() {
+      if (this.props.disableListeners) return;
+        const { mm, mq } = this.state;
+
+        Object.keys(mq).forEach(q => {
+          mm(mq[q]).removeListener(this.updateMediaQueries);
       });
     }
 
@@ -168,6 +184,7 @@ export default function Rezponsive(Element) {
   RezponsiveComponent.propTypes = {
     mq: PropTypes.object,
     isTouchOnServer: PropTypes.bool,
+    isTouch: PropTypes.bool,
     serverMedia: PropTypes.object,
     clientMedia: PropTypes.object,
     disableListeners: PropTypes.bool,
@@ -179,7 +196,6 @@ export default function Rezponsive(Element) {
     serverMedia: {
       all: true,
     },
-    clientMedia: null,
     disableListeners: false,
   };
 

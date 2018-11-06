@@ -109,6 +109,7 @@ render(
         portrait: true,
         landscape: false,
       }}
+      isTouch
       disableListeners
     >
       <ConsumerExample
