@@ -37,6 +37,7 @@ const isDifferent = (a, b) => {
 export default function Rezponsive(Element) {
   class RezponsiveComponent extends Component {
     static getDerivedStateFromProps(props, state) {
+      if (!canUseDOM) return null;
       // short circuit for invalid clientMedia
       if (!isObject(props.clientMedia)) return null;
       // no previous clientMedia defined
