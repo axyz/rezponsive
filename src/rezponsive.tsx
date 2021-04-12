@@ -1,43 +1,49 @@
 const canUseDOM = !!(
-  typeof window !== 'undefined' &&
+  typeof window !== "undefined" &&
   window.document &&
   window.document.createElement
 );
 
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import MQ from 'mediaquery';
+import React, { Component } from "react";
+import PropTypes from "prop-types";
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const MQ = require("mediaquery");
 
 export const RezponsiveContext = React.createContext({});
 
 function isTouchDevice() {
-    // unsupported browser such as IE11 are desktop only and will correctly
-    // return false
-    return window.matchMedia('(pointer: coarse)').matches;
+  // unsupported browser such as IE11 are desktop only and will correctly
+  // return false
+  return window.matchMedia("(pointer: coarse)").matches;
 }
 
-const isObject = a => a !== undefined && a !== null && typeof a === 'object';
+const isObject = (a: any) =>
+  a !== undefined && a !== null && typeof a === "object";
 
-const isDifferent = (a, b) => {
-  return Object.keys(a).some(el => a[el] !== b[el]);
+const isDifferent = (a: any, b: any) => {
+  return Object.keys(a).some((el) => a[el] !== b[el]);
 };
 
-export default function Rezponsive(Element) {
+export default function Rezponsive(Element: any): any {
   class RezponsiveComponent extends Component {
-    static getDerivedStateFromProps(props, state) {
+    skipInitialCheck: any;
+    state: any;
+    props: any;
+    static getDerivedStateFromProps(props: any, state: any) {
       if (!canUseDOM) return null;
       // short circuit for invalid clientMedia
       if (!isObject(props.clientMedia)) return null;
       // no previous clientMedia defined
       if (!isObject(state.prevClientMedia)) {
         // override the currentMedia with the newly passed clientMedia prop
-        if (isDifferent(props.clientMedia, state.currentMedia)
-          || (props.isTouch !== state.isTouch)
+        if (
+          isDifferent(props.clientMedia, state.currentMedia) ||
+          props.isTouch !== state.isTouch
         ) {
           return {
             prevClientMedia: props.clientMedia,
             currentMedia: props.clientMedia,
-            prevIsTouch : props.isTouch,
+            prevIsTouch: props.isTouch,
             isTouch: props.isTouch,
           };
         } else {
@@ -45,10 +51,11 @@ export default function Rezponsive(Element) {
         }
       }
 
-      const needsIsTouchUpdate = (props.isTouch !== state.prevIsTouch)
-        && (props.isTouch !== state.isTouch);
-      const needsClientMediaUpdate = isDifferent(props.clientMedia, state.prevClientMedia)
-        && isDifferent(props.clientMedia, state.currentMedia);
+      const needsIsTouchUpdate =
+        props.isTouch !== state.prevIsTouch && props.isTouch !== state.isTouch;
+      const needsClientMediaUpdate =
+        isDifferent(props.clientMedia, state.prevClientMedia) &&
+        isDifferent(props.clientMedia, state.currentMedia);
       // both clientMedia and prevClientMedia are defined and valid
       if (needsClientMediaUpdate || needsIsTouchUpdate) {
         return {
@@ -62,7 +69,7 @@ export default function Rezponsive(Element) {
       return null;
     }
 
-    constructor(props) {
+    constructor(props: any) {
       super(props);
 
       this.updateMediaQueries = this.updateMediaQueries.bind(this);
@@ -70,11 +77,12 @@ export default function Rezponsive(Element) {
       const mq = MQ.asArray(props.mq);
 
       if (canUseDOM) {
-        const isTouch = props.isTouch !== undefined ? props.isTouch :  isTouchDevice();
+        const isTouch =
+          props.isTouch !== undefined ? props.isTouch : isTouchDevice();
 
         const initialCurrentMedia =
           props.clientMedia ||
-          mq.reduce((matches, q, index, mq) => {
+          mq.reduce((matches: any, q: any, index: any, mq: any) => {
             if (index === mq.length) {
               matches[q[0]] = true;
             } else {
@@ -108,17 +116,17 @@ export default function Rezponsive(Element) {
       this.updateMediaQueries();
       const { mm, mq } = this.state;
 
-      Object.keys(mq).forEach(q => {
+      Object.keys(mq).forEach((q: any) => {
         mm(mq[q]).addListener(this.updateMediaQueries);
       });
     }
 
     componentWillUnmount() {
       if (this.props.disableListeners) return;
-        const { mm, mq } = this.state;
+      const { mm, mq } = this.state;
 
-        Object.keys(mq).forEach(q => {
-          mm(mq[q]).removeListener(this.updateMediaQueries);
+      Object.keys(mq).forEach((q) => {
+        mm(mq[q]).removeListener(this.updateMediaQueries);
       });
     }
 
@@ -130,7 +138,7 @@ export default function Rezponsive(Element) {
         return;
       }
 
-      const newMedia = mq.reduce((matches, q) => {
+      const newMedia = mq.reduce((matches: any, q: any) => {
         matches[q[0]] = mm(q[1]).matches;
         return matches;
       }, {});
@@ -139,12 +147,12 @@ export default function Rezponsive(Element) {
         (shouldUpdate, query) => {
           return shouldUpdate || newMedia[query] !== currentMedia[query];
         },
-        false,
+        false
       );
 
       if (needsUpdate) {
         this.setState({
-          currentMedia: mq.reduce((matches, q) => {
+          currentMedia: mq.reduce((matches: any, q: any) => {
             matches[q[0]] = mm(q[1]).matches;
             return matches;
           }, {}),
@@ -170,7 +178,7 @@ export default function Rezponsive(Element) {
     }
   }
 
-  RezponsiveComponent.propTypes = {
+  (RezponsiveComponent as any).propTypes = {
     mq: PropTypes.object,
     isTouchOnServer: PropTypes.bool,
     isTouch: PropTypes.bool,
@@ -179,8 +187,8 @@ export default function Rezponsive(Element) {
     disableListeners: PropTypes.bool,
   };
 
-  RezponsiveComponent.defaultProps = {
-    mq: { all: 'all' },
+  (RezponsiveComponent as any).defaultProps = {
+    mq: { all: "all" },
     isTouchOnServer: false,
     serverMedia: {
       all: true,
@@ -191,10 +199,10 @@ export default function Rezponsive(Element) {
   return RezponsiveComponent;
 }
 
-export function RezponsiveConsumer(Element) {
-  return props => (
+export function RezponsiveConsumer(Element: any) {
+  return (props: any) => (
     <RezponsiveContext.Consumer>
-      {ctx => <Element {...{ ...ctx, ...props }} />}
+      {(ctx) => <Element {...{ ...ctx, ...props }} />}
     </RezponsiveContext.Consumer>
   );
 }
