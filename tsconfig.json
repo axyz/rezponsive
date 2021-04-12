@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "module": "ESNext",
+    "esModuleInterop": true,
+    "target": "ESNext",
+    "lib": ["esnext.asynciterable", "es2017", "dom"],
+    "allowJs": true,
+    "noImplicitAny": true,
+    "moduleResolution": "node",
+    "sourceMap": true,
+    "outDir": "dist",
+    "jsx": "react",
+    "declaration": true,
+    "baseUrl": "./src",
+    "resolveJsonModule": true,
+    "types": ["node"],
+    "paths": {
+      "*": ["node_modules/*", "src/*"]
+    }
+  },
+  "sourceRoot": "src",
+  "include": ["src/**/*"]
+}

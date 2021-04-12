@@ -1,9 +1,9 @@
-import React, { PropTypes } from 'react';
-import { render } from 'react-dom';
-import Rezponsive, { RezponsiveContext, RezponsiveConsumer } from 'rezponsive';
+import React, { PropTypes } from "react";
+import { render } from "react-dom";
+import Rezponsive, { RezponsiveContext, RezponsiveConsumer } from "rezponsive";
 
 const ContextConsumerExample = Rezponsive(({ currentMedia, isTouch }) => {
-  console.log('render');
+  console.log("render");
   return (
     <RezponsiveContext.Consumer>
       {({ currentMedia, isTouch }) => (
@@ -32,8 +32,8 @@ render(
         m: 720,
         l: 1024,
         xl: Infinity,
-        portrait: '(orientation: portrait)',
-        landscape: '(orientation: landscape)',
+        portrait: "(orientation: portrait)",
+        landscape: "(orientation: landscape)",
       }}
       clientMedia={{
         s: false,
@@ -50,8 +50,8 @@ render(
         m: 720,
         l: 1024,
         xl: Infinity,
-        portrait: '(orientation: portrait)',
-        landscape: '(orientation: landscape)',
+        portrait: "(orientation: portrait)",
+        landscape: "(orientation: landscape)",
       }}
       clientMedia={{
         s: false,
@@ -69,8 +69,8 @@ render(
         m: 720,
         l: 1024,
         xl: Infinity,
-        portrait: '(orientation: portrait)',
-        landscape: '(orientation: landscape)',
+        portrait: "(orientation: portrait)",
+        landscape: "(orientation: landscape)",
       }}
       clientMedia={{
         s: false,
@@ -87,8 +87,8 @@ render(
           m: 720,
           l: 1024,
           xl: Infinity,
-          portrait: '(orientation: portrait)',
-          landscape: '(orientation: landscape)',
+          portrait: "(orientation: portrait)",
+          landscape: "(orientation: landscape)",
         }}
       />
     </RezponsiveApp>
@@ -98,8 +98,8 @@ render(
         m: 720,
         l: 1024,
         xl: Infinity,
-        portrait: '(orientation: portrait)',
-        landscape: '(orientation: landscape)',
+        portrait: "(orientation: portrait)",
+        landscape: "(orientation: landscape)",
       }}
       clientMedia={{
         s: false,
@@ -118,11 +118,11 @@ render(
           m: 720,
           l: 1024,
           xl: Infinity,
-          portrait: '(orientation: portrait)',
-          landscape: '(orientation: landscape)',
+          portrait: "(orientation: portrait)",
+          landscape: "(orientation: landscape)",
         }}
       />
     </RezponsiveApp>
   </div>,
-  document.getElementById('rezponsive-example'),
+  document.getElementById("rezponsive-example")
 );
